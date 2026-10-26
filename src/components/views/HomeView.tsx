@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   Play,
-  Film,
   History,
   ChevronRight,
   ChevronLeft,
   Heart,
   RotateCcw,
-  Flame,
+  Disc3,
+  Radio,
+  Sparkles,
 } from 'lucide-react';
 import { usePlayer } from '../../context/PlayerContext';
 import { DEMO_TRACKS } from '../../audio/demoCatalog';
@@ -28,54 +29,124 @@ interface CategoryState {
   error: string | null;
 }
 
-// Curated Cinematic Hero Spotlights using verified local Pinterest assets
-const HERO_SPOTLIGHTS = [
+// Curated Retro Analog Spotlights using vintage cinema and radio assets
+const RETRO_HERO_SPOTLIGHTS = [
   {
-    id: 'hero-og',
-    title: 'THEY CALL HIM OG',
-    subtitle: 'Power Star Pawan Kalyan · Thaman S High-Voltage Firestorm',
-    tag: 'TFI MASS ANTHEM',
-    imageUrl: '/cinema/og-pawan-kalyan.jpg',
-    categoryQuery: 'They Call Him OG songs official video',
-    description: 'Relentless bass drops, thunderous brass, and iconic whistle themes composed for the big screen.',
+    id: 'hero-retro-golden',
+    title: 'GOLDEN ERA RETRO VAULT',
+    subtitle: 'Maestro Ilaiyaraaja · SPB · S. Janaki · K.V. Mahadevan',
+    tag: 'VINTAGE ANALOG MASTER TAPE',
+    badgeText: 'DOLBY B-NR · HIGH BIAS',
+    tapeCode: 'TZX-REEL-78',
+    tapeCounter: '04:20 · SIDE A',
+    imageUrl: '/cinema/pin-retro-radio.jpg',
+    categoryQuery: 'Ilaiyaraaja SPB golden hits official',
+    catId: 'south-indian',
+    description: 'Warm analog harmonics, lush violins, acoustic rhythm sections, and timeless celluloid melodies recorded on magnetic tape across the golden decades.',
   },
   {
-    id: 'hero-baahubali',
-    title: 'BAAHUBALI LEGACY',
-    subtitle: 'Rebel Star Prabhas · M.M. Keeravani Orchestral Epics',
-    tag: 'HISTORIC SYMPHONY',
-    imageUrl: '/cinema/prabhas-baahubali.jpg',
-    categoryQuery: 'Baahubali songs official Keeravani video',
-    description: 'Immense choral vocals, traditional Indian percussion, and timeless cinematic grandeur.',
+    id: 'hero-retro-ilaiyaraaja',
+    title: 'MAESTRO ILAIYARAAJA',
+    subtitle: 'Symphonic Strings, Acoustic Flutes & Timeless 80s Nostalgia',
+    tag: 'CELLULOID ORCHESTRAL CLASSICS',
+    badgeText: 'PURE HARMONICS · 45 RPM',
+    tapeCode: 'TZX-TAPE-82',
+    tapeCounter: '08:15 · SIDE A',
+    imageUrl: '/cinema/pin-vintage-hero.jpg',
+    categoryQuery: 'Ilaiyaraaja Telugu classic melodies',
+    catId: 'chill',
+    description: 'Pioneering fusion of Indian classical ragas with Western orchestral arrangements that defined the soul of vintage South Indian cinema.',
   },
   {
-    id: 'hero-jersey',
-    title: 'JERSEY CLASSICS',
-    subtitle: 'Natural Star Nani · Anirudh Ravichander Soul Melodies',
-    tag: 'HEARTFELT EMOTION',
-    imageUrl: '/cinema/nani-jersey.jpg',
-    categoryQuery: 'Jersey movie songs Anirudh official',
-    description: 'Poignant acoustic ballads and uplifting sports anthems that define modern Telugu cinema.',
+    id: 'hero-retro-cassette',
+    title: 'CASSETTE TAPE MEMORIES',
+    subtitle: 'Geethanjali · Swarna Kamalam · Dalapathi · Roja Wave',
+    tag: '90s RETRO WALKMAN NOSTALGIA',
+    badgeText: 'C-90 CHROME · HI-FI',
+    tapeCode: 'C-90 CHROME',
+    tapeCounter: '12:44 · SIDE B',
+    imageUrl: '/cinema/samantha-retro.jpg',
+    categoryQuery: '90s Telugu super hit romantic songs',
+    catId: 'telugu',
+    description: 'Rewind the spool to the iconic era of portable tape decks, gentle tape hiss, and unforgettable cinematic melodies.',
   },
   {
-    id: 'hero-anirudh',
-    title: 'ANIRUDH WAVE',
-    subtitle: 'Rockstar Anirudh · High-Octane South & Telugu Chartbusters',
-    tag: 'MODERN VIRAL HITS',
-    imageUrl: '/cinema/anirudh-rockstar.jpg',
-    categoryQuery: 'Anirudh superhit songs official music video',
-    description: 'Electronic synth lines fused with Indian kuthu rhythms and infectious vocal hooks.',
+    id: 'hero-retro-funk',
+    title: 'RETRO VINYL & SOUL',
+    subtitle: 'R.D. Burman · Kishore Kumar · Asha Bhosle Brass Grooves',
+    tag: '70s RETRO BRASS & FUNK',
+    badgeText: '33⅓ RPM WAX · STEREO',
+    tapeCode: 'HMV-VINYL-75',
+    tapeCounter: '18:02 · SIDE A',
+    imageUrl: '/cinema/retro-comic.jpg',
+    categoryQuery: 'RD Burman retro hits Kishore Kumar',
+    catId: 'bollywood',
+    description: 'Psychedelic organ riffs, explosive brass arrangements, and groovy basslines from the golden age of analog recording studios.',
   },
 ];
 
-// Quick Picks with local cinema poster art
-const CINEMA_QUICK_PICKS = [
-  { id: 'pick-og', title: 'They Call Him OG', subtitle: 'Pawan Kalyan · Thaman S', img: '/cinema/og-pawan-kalyan.jpg', catId: 'telugu' },
-  { id: 'pick-jersey', title: 'Jersey Classics', subtitle: 'Nani · Anirudh', img: '/cinema/nani-jersey.jpg', catId: 'romantic' },
-  { id: 'pick-baahubali', title: 'Baahubali Legacy', subtitle: 'Prabhas · Keeravani', img: '/cinema/prabhas-baahubali.jpg', catId: 'south-indian' },
-  { id: 'pick-pushpa', title: 'Pushpa 2 The Rule', subtitle: 'Allu Arjun · DSP', img: '/cinema/allu-arjun-pushpa.jpg', catId: 'party' },
-  { id: 'pick-anirudh', title: 'Anirudh Spotlight', subtitle: 'Rockstar Hits', img: '/cinema/anirudh-rockstar.jpg', catId: 'trending' },
-  { id: 'pick-retro', title: 'Golden Era Radio', subtitle: 'Ghantasala & SPB', img: '/cinema/retro-comic.jpg', catId: 'chill' },
+// Retro Crate Picks with authentic vintage format styling
+const RETRO_QUICK_PICKS = [
+  {
+    id: 'pick-ilaiyaraaja',
+    title: 'Maestro Ilaiyaraaja',
+    subtitle: 'Violin, Flute & Raga Classics',
+    img: '/cinema/pin-retro-radio.jpg',
+    catId: 'south-indian',
+    format: 'ANALOG MASTER',
+    year: '1982',
+    side: 'SIDE A',
+  },
+  {
+    id: 'pick-spb',
+    title: 'SPB Golden Melodies',
+    subtitle: 'Timeless 80s & 90s Romantic Duets',
+    img: '/cinema/pin-vintage-hero.jpg',
+    catId: 'romantic',
+    format: 'STEREO TAPE',
+    year: '1989',
+    side: 'SIDE A',
+  },
+  {
+    id: 'pick-90s-telugu',
+    title: '90s Cassette Nostalgia',
+    subtitle: 'Geethanjali, Roja & Walkman Hits',
+    img: '/cinema/samantha-retro.jpg',
+    catId: 'telugu',
+    format: 'C-90 CASSETTE',
+    year: '1993',
+    side: 'SIDE B',
+  },
+  {
+    id: 'pick-rd-burman',
+    title: 'Retro Bollywood Vinyl',
+    subtitle: 'R.D. Burman & Kishore Funk',
+    img: '/cinema/retro-comic.jpg',
+    catId: 'bollywood',
+    format: '33⅓ RPM WAX',
+    year: '1975',
+    side: 'SIDE A',
+  },
+  {
+    id: 'pick-celluloid-legends',
+    title: 'Celluloid Legends Radio',
+    subtitle: 'Ghantasala, Susheela & K.V.M',
+    img: '/cinema/pin-cinematic.jpg',
+    catId: 'chill',
+    format: '78 RPM SHELLAC',
+    year: '1965',
+    side: 'SIDE A',
+  },
+  {
+    id: 'pick-analog-lofi',
+    title: 'Analog Midnight Lo-Fi',
+    subtitle: 'Warm Tube Vinyl & Tape Hiss',
+    img: '/cinema/brutalist-cinema.jpg',
+    catId: 'trending',
+    format: 'LO-FI REEL',
+    year: 'VINTAGE',
+    side: 'NOCTURNE',
+  },
 ];
 
 export const HomeView: React.FC = () => {
@@ -93,7 +164,7 @@ export const HomeView: React.FC = () => {
   } = usePlayer();
 
   const [activeHeroIdx, setActiveHeroIdx] = useState(0);
-  const activeHero = HERO_SPOTLIGHTS[activeHeroIdx];
+  const activeHero = RETRO_HERO_SPOTLIGHTS[activeHeroIdx];
 
   const [categoryData, setCategoryData] = useState<Record<string, CategoryState>>(() => {
     const initial: Record<string, CategoryState> = {};
@@ -200,69 +271,98 @@ export const HomeView: React.FC = () => {
 
   // Play hero spotlight track
   const handlePlayHero = () => {
-    const trendingTracks = categoryData['trending']?.tracks || [];
-    if (trendingTracks.length > 0) {
-      playTrack(trendingTracks[0], trendingTracks);
+    const catId = activeHero.catId || 'south-indian';
+    const catTracks = categoryData[catId]?.tracks || categoryData['trending']?.tracks || [];
+    if (catTracks.length > 0) {
+      playTrack(catTracks[0], catTracks);
     } else {
-      selectCategory('trending');
+      selectCategory(catId);
     }
   };
 
   return (
     <div className="space-y-10 pb-16">
-      {/* 1. Cinematic Hero Showcase Banner */}
-      <section className="relative rounded-2xl overflow-hidden cinema-panel border-2 border-cinema-border/70 shadow-2xl">
-        <div className="relative h-72 sm:h-80 md:h-96 w-full overflow-hidden">
-          {/* Background Poster Image */}
+      {/* 1. Retro Analog Hero Showcase Banner */}
+      <section className="relative rounded-2xl overflow-hidden cinema-panel border-2 border-cinema-gold/40 shadow-2xl bg-[#0E0A0C]">
+        <div className="relative h-80 sm:h-88 md:h-[400px] w-full overflow-hidden">
+          {/* Background Poster Image with Vintage Film Saturation */}
           <img
             src={activeHero.imageUrl}
             alt={activeHero.title}
-            className="w-full h-full object-cover object-center filter brightness-[0.75] contrast-[1.1] transition-all duration-700 transform hover:scale-102"
+            className="w-full h-full object-cover object-center filter brightness-[0.70] contrast-[1.15] sepia-[0.25] transition-all duration-700 transform hover:scale-102"
           />
 
-          {/* Deep Wine Red, Charcoal & Vignette Lighting Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cinema-bg via-cinema-bg/85 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-cinema-bg via-cinema-bg/40 to-transparent" />
-          <div className="absolute inset-0 bg-cinema-wine/25 mix-blend-color" />
+          {/* Deep Vintage Gradients & Tape Texture Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0C080A] via-[#0C080A]/85 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0C080A] via-[#0C080A]/50 to-transparent" />
+          <div className="absolute inset-0 bg-amber-950/20 mix-blend-color" />
+          
+          {/* Subtle analog tape scanlines */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.04]"
+            style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px)', backgroundSize: '100% 3px' }}
+          />
 
           {/* Foreground Hero Content */}
-          <div className="absolute inset-0 p-4 sm:p-8 md:p-10 flex flex-col justify-between z-10">
-            {/* Top Badge & Selector Pills */}
+          <div className="absolute inset-0 p-5 sm:p-8 md:p-10 flex flex-col justify-between z-10">
+            {/* Top Analog Deck Header Bar */}
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-cinema-gold border border-cinema-gold/40 flex items-center gap-1.5 shadow-md">
-                <Flame className="w-3.5 h-3.5 text-cinema-vermilion" />
-                {activeHero.tag}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-black/80 backdrop-blur-md text-cinema-gold border border-cinema-gold/50 flex items-center gap-1.5 shadow-md">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+                  {activeHero.tag}
+                </span>
 
-              {/* Spotlight Navigator Pills */}
-              <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md p-1 rounded-full border border-cinema-border/60">
-                {HERO_SPOTLIGHTS.map((h, idx) => (
-                  <button
-                    key={h.id}
-                    type="button"
-                    onClick={() => setActiveHeroIdx(idx)}
-                    className={`h-2 transition-all rounded-full ${
-                      activeHeroIdx === idx ? 'w-6 bg-cinema-gold' : 'w-2 bg-cinema-ivoryMuted/40 hover:bg-white'
-                    }`}
-                    aria-label={`Show ${h.title}`}
-                  />
-                ))}
+                <span className="hidden sm:inline-block font-mono text-[9px] text-cinema-ivoryMuted/80 px-2 py-0.5 rounded bg-black/60 border border-cinema-border/60">
+                  {activeHero.badgeText}
+                </span>
+              </div>
+
+              {/* Tape Deck Counter & Reel Navigator */}
+              <div className="flex items-center gap-2.5">
+                <div className="tape-counter font-mono text-[10px] tracking-widest text-cinema-gold bg-black/80 px-2.5 py-1 rounded border border-cinema-gold/40 flex items-center gap-1.5 shadow-md">
+                  <Radio className="w-3 h-3 text-cinema-gold" />
+                  <span>{activeHero.tapeCounter}</span>
+                </div>
+
+                {/* Spool / Reel Hub Indicator Dots */}
+                <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md p-1 rounded-full border border-cinema-gold/30">
+                  {RETRO_HERO_SPOTLIGHTS.map((h, idx) => (
+                    <button
+                      key={h.id}
+                      type="button"
+                      onClick={() => setActiveHeroIdx(idx)}
+                      className={`transition-all rounded-full flex items-center justify-center ${
+                        activeHeroIdx === idx
+                          ? 'w-6 h-3 bg-cinema-gold text-black shadow-[0_0_8px_rgba(212,175,55,0.6)]'
+                          : 'w-2 h-2 bg-cinema-ivoryMuted/30 hover:bg-white'
+                      }`}
+                      aria-label={`Show ${h.title}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Main Title Lettering & Actions */}
-            <div className="max-w-xl space-y-3">
-              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider text-cinema-ivory uppercase leading-none drop-shadow-md">
+            {/* Main Title Lettering & Vintage Controls */}
+            <div className="max-w-2xl space-y-2.5">
+              <div className="inline-block font-mono text-[10px] font-bold text-cinema-gold tracking-widest uppercase bg-cinema-wine/40 px-2 py-0.5 rounded border border-cinema-gold/30">
+                REEL #{activeHero.tapeCode}
+              </div>
+
+              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-wider text-gold-gradient uppercase leading-none drop-shadow-md">
                 {activeHero.title}
               </h1>
-              <p className="font-sans text-xs sm:text-sm font-semibold text-cinema-gold">
+
+              <p className="font-cinematic text-xs sm:text-sm font-semibold text-cinema-gold tracking-wide">
                 {activeHero.subtitle}
               </p>
-              <p className="font-sans text-xs text-cinema-ivoryMuted hidden sm:block leading-relaxed line-clamp-2">
+
+              <p className="font-sans text-xs text-cinema-ivoryMuted/90 hidden sm:block leading-relaxed line-clamp-2 max-w-xl">
                 {activeHero.description}
               </p>
 
-              {/* Tactile Keycap Buttons */}
+              {/* Tactile Retro Keycap Buttons */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <KeycapButton
                   variant="primary"
@@ -272,59 +372,89 @@ export const HomeView: React.FC = () => {
                   icon={<Play className="w-4 h-4 fill-current ml-0.5" />}
                   className="font-sans font-bold shadow-xl"
                 >
-                  Play Spotlight
+                  Play Retro Vault
                 </KeycapButton>
 
                 <KeycapButton
                   variant="deck"
                   shape="pill"
                   size="md"
-                  onClick={() => selectCategory('south-indian')}
-                  icon={<Film className="w-4 h-4 text-cinema-gold" />}
+                  onClick={() => selectCategory(activeHero.catId)}
+                  icon={<Disc3 className="w-4 h-4 text-cinema-gold" />}
                   className="font-sans font-semibold"
                 >
-                  Explore TFI Vault
+                  Explore Analog Crates
                 </KeycapButton>
+
+                <span className="hidden md:inline-flex items-center gap-1 font-mono text-[9px] text-cinema-ivoryMuted/70 border border-cinema-border/50 px-2 py-1 rounded bg-black/40">
+                  <Sparkles className="w-3 h-3 text-cinema-gold" />
+                  33⅓ RPM HIGH-FIDELITY
+                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Cinema Quick Picks (6-Grid with Verified Local Cinema Art) */}
+      {/* 2. Retro Analog Picks (Vinyl & Cassette Crate Styling) */}
       <section>
         <div className="flex items-center justify-between mb-3.5">
-          <div className="flex items-center gap-2">
-            <Film className="w-4 h-4 text-cinema-gold" />
-            <h2 className="font-display text-lg tracking-wider uppercase text-cinema-ivory">
-              Cinema Quick Picks
-            </h2>
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-cinema-card border border-cinema-gold/40 flex items-center justify-center shadow">
+              <Disc3 className="w-4 h-4 text-cinema-gold animate-spin-slow" />
+            </div>
+            <div>
+              <h2 className="font-display text-lg sm:text-xl tracking-wider uppercase text-cinema-ivory">
+                Retro Analog Picks
+              </h2>
+              <p className="text-[11px] text-cinema-ivoryMuted font-sans">Hand-picked classic analog tapes &amp; vinyl crates</p>
+            </div>
           </div>
-          <span className="font-mono text-[10px] text-cinema-gold tracking-widest uppercase">
-            TFI Curated
+          <span className="font-mono text-[10px] text-cinema-gold tracking-widest uppercase px-2.5 py-1 rounded bg-black/60 border border-cinema-gold/30">
+            VINTAGE CRATES
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {CINEMA_QUICK_PICKS.map((item) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {RETRO_QUICK_PICKS.map((item) => (
             <div
               key={item.id}
               onClick={() => selectCategory(item.catId)}
-              className="group flex items-center gap-3.5 bg-cinema-panel/70 hover:bg-cinema-card rounded-xl overflow-hidden border border-cinema-border/50 hover:border-cinema-gold/60 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-lg"
+              className="group relative flex items-center gap-3.5 bg-gradient-to-r from-[#181116] to-[#110C0F] hover:from-[#241921] hover:to-[#1B131A] p-2.5 rounded-xl overflow-hidden border border-cinema-border/60 hover:border-cinema-gold/70 transition-all duration-300 cursor-pointer shadow-md hover:shadow-[0_8px_22px_rgba(212,175,55,0.15)] hover:-translate-y-0.5"
             >
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-16 h-16 object-cover bg-cinema-card flex-shrink-0"
-              />
-              <div className="min-w-0 flex-1 pr-2">
-                <span className="font-sans font-bold text-xs text-cinema-ivory group-hover:text-cinema-gold transition-colors block truncate">
-                  {item.title}
-                </span>
-                <span className="font-sans text-[11px] text-cinema-ivoryMuted block truncate">
-                  {item.subtitle}
-                </span>
+              {/* Vinyl Sleeve with Grooved Record Rim Peek */}
+              <div className="relative flex-shrink-0 flex items-center">
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="w-16 h-16 rounded-lg object-cover bg-cinema-card relative z-10 shadow-md border border-black/50 filter contrast-[1.05]"
+                />
+                {/* Peeking Vinyl Record Disc */}
+                <div className="w-14 h-14 rounded-full bg-[#0E0A0C] border border-cinema-gold/30 -ml-7 group-hover:-ml-4 transition-all duration-300 flex items-center justify-center shadow-md relative z-0 pointer-events-none">
+                  <div className="w-10 h-10 rounded-full border border-cinema-border/50 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-cinema-wine/60 border border-cinema-gold/40 flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
+                      <div className="w-1.5 h-1.5 rounded-full bg-black" />
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Vintage Track / Artist Details */}
+              <div className="min-w-0 flex-1 pr-1">
+                <div className="flex items-center gap-1.5 font-mono text-[9px] text-cinema-gold/90 font-semibold tracking-wider uppercase mb-0.5">
+                  <span>{item.format}</span>
+                  <span className="text-cinema-ivoryMuted/40">·</span>
+                  <span>{item.year}</span>
+                </div>
+                <h3 className="font-sans font-bold text-xs sm:text-sm text-cinema-ivory group-hover:text-cinema-gold transition-colors block truncate">
+                  {item.title}
+                </h3>
+                <p className="font-sans text-[11px] text-cinema-ivoryMuted/80 block truncate">
+                  {item.subtitle}
+                </p>
+              </div>
+
+              {/* Tactile Keycap Play Button */}
               <button
                 type="button"
                 aria-label={`Play ${item.title}`}
@@ -332,7 +462,7 @@ export const HomeView: React.FC = () => {
                   e.stopPropagation();
                   selectCategory(item.catId);
                 }}
-                className="keycap-base keycap-circle keycap-primary w-9 h-9 mr-3 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                className="keycap-base keycap-circle keycap-primary w-9 h-9 mr-1 flex items-center justify-center opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all shadow-lg flex-shrink-0"
               >
                 <Play className="w-4 h-4 fill-current ml-0.5" />
               </button>

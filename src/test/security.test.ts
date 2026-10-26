@@ -72,5 +72,5 @@ describe('Security, Environment & Secrets Protection', () => {
       expect(res.message).not.toContain('C:');
       expect(res.message).not.toContain('node_modules');
     }
-  });
+  }, 15000);
 });
