@@ -203,6 +203,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const isYouTube = track.provider === 'youtube' || Boolean(track.videoId) || track.id.startsWith('yt-');
     setIsYouTubeActive(isYouTube);
+    if (isYouTube) {
+      setIsYouTubeVideoVisible(true);
+    }
 
     try {
       if (isYouTube) {

@@ -50,6 +50,30 @@ export class YouTubePlayerEngine {
     }
 
     return new Promise((resolve) => {
+      let isResolved = false;
+      const safeResolve = () => {
+        if (!isResolved) {
+          isResolved = true;
+          this.isApiReady = true;
+          clearInterval(checkInterval);
+          clearTimeout(timeoutId);
+          resolve();
+        }
+      };
+
+      // 1. Periodic check in case script loaded or event already fired
+      const checkInterval = setInterval(() => {
+        if (window.YT && window.YT.Player) {
+          safeResolve();
+        }
+      }, 60);
+
+      // 2. Timeout safeguard so callers never hang indefinitely
+      const timeoutId = setTimeout(() => {
+        safeResolve();
+      }, 8000);
+
+      // 3. Script injection if not already in DOM
       const existingScript = document.getElementById('youtube-iframe-api-script');
       if (!existingScript) {
         const tag = document.createElement('script');
@@ -59,11 +83,11 @@ export class YouTubePlayerEngine {
         firstScript?.parentNode?.insertBefore(tag, firstScript);
       }
 
+      // 4. Official API ready callback
       const prevCallback = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         if (prevCallback) prevCallback();
-        this.isApiReady = true;
-        resolve();
+        safeResolve();
       };
     });
   }
@@ -81,10 +105,15 @@ export class YouTubePlayerEngine {
       }
 
       if (this.player && typeof this.player.loadVideoById === 'function') {
-        if (autoPlay) {
-          this.player.loadVideoById({ videoId, startSeconds: 0 });
-        } else {
-          this.player.cueVideoById({ videoId, startSeconds: 0 });
+        try {
+          if (autoPlay) {
+            this.player.loadVideoById({ videoId, startSeconds: 0 });
+            this.player.playVideo?.();
+          } else {
+            this.player.cueVideoById({ videoId, startSeconds: 0 });
+          }
+        } catch {
+          // If existing instance failed, will recreate below
         }
         resolve();
         return;
@@ -100,7 +129,10 @@ export class YouTubePlayerEngine {
             controls: 1, // Show standard YouTube controls inside embedded player per compliance
             modestbranding: 1,
             rel: 0,
-            origin: typeof window !== 'undefined' ? window.location.origin : '',
+            enablejsapi: 1,
+            playsinline: 1,
+            iv_load_policy: 3,
+            origin: typeof window !== 'undefined' ? window.location.origin : undefined,
           },
           events: {
             onReady: (event: any) => {
@@ -110,7 +142,11 @@ export class YouTubePlayerEngine {
                 event.target.mute();
               }
               if (autoPlay) {
-                event.target.playVideo();
+                try {
+                  event.target.playVideo();
+                } catch {
+                  // Autoplay might need user interaction on some browsers
+                }
               }
               resolve();
             },
