@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <rect width="48" height="48" rx="12" fill="#0A0809"/>
+  <circle cx="24" cy="24" r="21" stroke="#3D2E37" stroke-width="1.5"/>
+  <circle cx="24" cy="24" r="19" stroke="#D4AF37" stroke-width="1.5" stroke-opacity="0.4"/>
+  <!-- sonara X TzionX Cinema Sound Reel Bars -->
+  <rect x="11" y="20" width="4" height="8" rx="2" fill="#D9381E"/>
+  <rect x="17" y="14" width="4" height="20" rx="2" fill="#D4AF37"/>
+  <rect x="23" y="9" width="4" height="30" rx="2" fill="#D9381E"/>
+  <rect x="29" y="15" width="4" height="18" rx="2" fill="#D4AF37"/>
+  <rect x="35" y="21" width="4" height="6" rx="2" fill="#D9381E"/>
+</svg>

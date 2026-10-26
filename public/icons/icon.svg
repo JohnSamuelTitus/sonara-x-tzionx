@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="128" fill="#0A0809"/>
+  <!-- Concentric Vinyl Rings -->
+  <circle cx="256" cy="256" r="224" stroke="#3D2E37" stroke-width="16"/>
+  <circle cx="256" cy="256" r="202" stroke="#D4AF37" stroke-width="12" stroke-opacity="0.45"/>
+  <circle cx="256" cy="256" r="172" stroke="#3D2E37" stroke-width="6" stroke-opacity="0.3"/>
+  <circle cx="256" cy="256" r="142" stroke="#3D2E37" stroke-width="4" stroke-opacity="0.2"/>
+  <!-- Cinema Sound Reel Equalizer Bars -->
+  <rect x="117" y="213" width="43" height="86" rx="21.5" fill="#D9381E"/>
+  <rect x="181" y="149" width="43" height="214" rx="21.5" fill="#D4AF37"/>
+  <rect x="245" y="96" width="43" height="320" rx="21.5" fill="#D9381E"/>
+  <rect x="309" y="160" width="43" height="192" rx="21.5" fill="#D4AF37"/>
+  <rect x="373" y="224" width="43" height="64" rx="21.5" fill="#D9381E"/>
+</svg>

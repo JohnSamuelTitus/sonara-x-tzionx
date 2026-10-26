@@ -1,0 +1,357 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-cinema-bg text-cinema-ivory antialiased select-none font-sans overflow-hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Custom Warm Dark Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0E0B0D;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #3A2E36;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D4AF37;
+  }
+}
+
+/* ==============================================================================
+   SONARA X TZIONX — TYPEWRITER-KEYCAP CONTROL SYSTEM
+   ============================================================================== */
+
+/* Base mechanical keycap structure */
+.keycap-base {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', 'Courier Prime', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.keycap-base:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 2px;
+}
+
+.keycap-base:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 1. Primary Playback & Action Keycap (Vermilion / Cinema Red) */
+.keycap-primary {
+  background: linear-gradient(180deg, #E6472D 0%, #B82512 100%);
+  color: #FFFFFF;
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #6E1208;
+  box-shadow: 0 4px 0 #540D05, 0 6px 12px rgba(0, 0, 0, 0.7);
+}
+
+.keycap-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #F0533A 0%, #C82A15 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 #540D05, 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+
+.keycap-primary:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #540D05, 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 2. Cassette Deck Transport & Surface Keycap (Charcoal / Brass Inset) */
+.keycap-deck {
+  background: linear-gradient(180deg, #2A2027 0%, #191317 100%);
+  color: #F5EFEB;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid #100C0F;
+  box-shadow: 0 3px 0 #0C090B, 0 5px 10px rgba(0, 0, 0, 0.6);
+}
+
+.keycap-deck:hover:not(:disabled) {
+  background: linear-gradient(180deg, #362932 0%, #20181E 100%);
+  color: #D4AF37;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #0C090B, 0 7px 14px rgba(0, 0, 0, 0.7);
+}
+
+.keycap-deck:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #0C090B, 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 3. Vintage Gold Keycap (Special Actions / TFI Spotlight) */
+.keycap-gold {
+  background: linear-gradient(180deg, #E6C875 0%, #B8934A 100%);
+  color: #1A1208;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #785A1D;
+  box-shadow: 0 3px 0 #5E4616, 0 5px 10px rgba(0, 0, 0, 0.6);
+}
+
+.keycap-gold:hover:not(:disabled) {
+  background: linear-gradient(180deg, #F0D58C 0%, #C5A059 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #5E4616, 0 7px 14px rgba(0, 0, 0, 0.7);
+}
+
+.keycap-gold:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #5E4616, 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 4. Warm Ivory Typewriter Keycap (Secondary Controls) */
+.keycap-ivory {
+  background: linear-gradient(180deg, #FAF6F2 0%, #DDD1C5 100%);
+  color: #241A21;
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid #9C8F83;
+  box-shadow: 0 3px 0 #7A6F65, 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.keycap-ivory:hover:not(:disabled) {
+  background: linear-gradient(180deg, #FFFFFF 0%, #E8DCD1 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #7A6F65, 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.keycap-ivory:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #7A6F65, 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 5. Destructive / Red Keycap */
+.keycap-danger {
+  background: linear-gradient(180deg, #7A141A 0%, #4D090E 100%);
+  color: #F8D7DA;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid #2B0508;
+  box-shadow: 0 3px 0 #1A0305, 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.keycap-danger:hover:not(:disabled) {
+  background: linear-gradient(180deg, #8E1920 0%, #5E0C12 100%);
+  transform: translateY(-1px);
+}
+
+.keycap-danger:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1A0305;
+}
+
+/* 6. Luxury Console Navigation Switch Keycaps */
+.keycap-nav-active {
+  background: linear-gradient(180deg, #3D0D14 0%, #1F050A 100%);
+  color: #F5EFEB;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 3px 0 #120306, inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 14px rgba(74, 14, 23, 0.5);
+}
+
+.keycap-nav-active:hover {
+  background: linear-gradient(180deg, #4A1019 0%, #29070D 100%);
+  border-color: rgba(212, 175, 55, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #120306, inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 18px rgba(212, 175, 55, 0.2);
+}
+
+.keycap-nav-idle {
+  background: linear-gradient(180deg, #1C151A 0%, #110D10 100%);
+  color: #A3969E;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  box-shadow: 0 2px 0 #0A0709, 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.keycap-nav-idle:hover {
+  background: linear-gradient(180deg, #261D24 0%, #171115 100%);
+  color: #F5EFEB;
+  border-color: rgba(212, 175, 55, 0.35);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 #0A0709, 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Circular keycap variant for round transport buttons */
+.keycap-circle {
+  border-radius: 9999px !important;
+}
+
+/* Square / pill keycap variant */
+.keycap-square {
+  border-radius: 8px;
+}
+
+.keycap-pill {
+  border-radius: 9999px;
+}
+
+/* Mechanical latching toggle state */
+.keycap-toggle-active {
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #0C090B, inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+  border-color: #D4AF37 !important;
+  color: #D4AF37 !important;
+}
+
+/* Status LED pip for audio hardware toggles */
+.led-pip {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background-color: #4A3A42;
+  transition: all 0.2s ease;
+}
+
+.led-pip-active {
+  background-color: #D4AF37;
+  box-shadow: 0 0 6px #F0DFB0, 0 0 10px rgba(212, 175, 55, 0.8);
+}
+
+/* ==============================================================================
+   AUDIO HARDWARE / CASSETTE DECK AESTHETICS
+   ============================================================================== */
+
+/* Tape counter / Digital readout */
+.tape-counter {
+  font-family: 'Space Mono', 'Courier Prime', monospace;
+  background: #0B080A;
+  border: 1px solid #2A1F26;
+  border-radius: 4px;
+  padding: 2px 8px;
+  color: #D4AF37;
+  text-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+  letter-spacing: 0.1em;
+}
+
+/* Custom mixer fader slider */
+input[type="range"].deck-slider {
+  -webkit-appearance: none;
+  background: #231A21;
+  border: 1px solid #3D2E37;
+  border-radius: 4px;
+  height: 6px;
+  outline: none;
+}
+
+input[type="range"].deck-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #F5EFEB 0%, #D4AF37 100%);
+  border: 1px solid #2D2028;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"].deck-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #F0DFB0;
+}
+
+/* Cinematic subtle card elevation */
+.cinema-panel {
+  background: linear-gradient(180deg, rgba(27, 20, 25, 0.85) 0%, rgba(19, 15, 19, 0.95) 100%);
+  border: 1px solid #362932;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.7);
+}
+
+.cinema-card {
+  background: #1B1419;
+  border: 1px solid #31242D;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cinema-card:hover {
+  background: #251B22;
+  border-color: #D4AF37;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.8), 0 0 1px rgba(212, 175, 55, 0.4);
+}
+
+/* Subtle wine and gold glow */
+.glow-wine {
+  box-shadow: 0 0 30px -5px rgba(115, 22, 36, 0.4);
+}
+
+.glow-gold {
+  box-shadow: 0 0 25px -5px rgba(212, 175, 55, 0.35);
+}
+
+/* Cinema title lettering gradient */
+.text-gold-gradient {
+  background: linear-gradient(180deg, #F5EFEB 0%, #D4AF37 70%, #A3832B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==============================================================================
+   PWA MOBILE SAFE AREA & RESPONSIVE UTILITIES
+   ============================================================================== */
+
+/* Safe area insets for notched devices & modern mobile browsers */
+.safe-area-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.safe-area-top {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+/* Remove 300ms double-tap delay on mobile controls */
+button, input, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Hide scrollbars for clean mobile touch carousels while preserving scrollability */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Accessibility: Honor reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
