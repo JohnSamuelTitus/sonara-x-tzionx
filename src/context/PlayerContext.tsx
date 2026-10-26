@@ -62,7 +62,13 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isQueueOpen, setIsQueueOpen] = useState(false);
   const [isYouTubeConfigured, setIsYouTubeConfigured] = useState(false);
   const [isYouTubeActive, setIsYouTubeActive] = useState(false);
-  const [isYouTubeVideoVisible, setIsYouTubeVideoVisible] = useState(false);
+  const [isYouTubeVideoVisible, setIsYouTubeVideoVisibleState] = useState(false);
+  const userExplicitlyClosedVideoRef = useRef(false);
+
+  const setIsYouTubeVideoVisible = useCallback((visible: boolean) => {
+    userExplicitlyClosedVideoRef.current = !visible;
+    setIsYouTubeVideoVisibleState(visible);
+  }, []);
 
   // In-memory track registry for dynamically discovered YouTube tracks
   const trackRegistryRef = useRef<Map<string, Track>>(new Map());
@@ -203,8 +209,8 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const isYouTube = track.provider === 'youtube' || Boolean(track.videoId) || track.id.startsWith('yt-');
     setIsYouTubeActive(isYouTube);
-    if (isYouTube) {
-      setIsYouTubeVideoVisible(true);
+    if (isYouTube && !userExplicitlyClosedVideoRef.current) {
+      setIsYouTubeVideoVisibleState(true);
     }
 
     try {
