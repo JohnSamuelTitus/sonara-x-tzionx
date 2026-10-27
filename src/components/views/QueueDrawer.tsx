@@ -12,7 +12,7 @@ export const QueueDrawer: React.FC = () => {
   const upcomingTracks = queue.slice(queueIndex + 1);
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full sm:w-96 max-w-full bg-cinema-surface border-l-2 border-cinema-border/70 shadow-2xl z-50 flex flex-col p-4 sm:p-5 animate-in slide-in-from-right duration-200">
+    <div className="fixed inset-y-0 right-0 w-full sm:w-96 max-w-full bg-cinema-surface border-l-2 border-cinema-border/70 shadow-2xl z-50 flex flex-col p-4 sm:p-5 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] animate-in slide-in-from-right duration-200">
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-cinema-border/50">
         <div className="flex items-center gap-2">
@@ -24,11 +24,12 @@ export const QueueDrawer: React.FC = () => {
         <KeycapButton
           variant="deck"
           shape="circle"
-          size="xs"
+          size="sm"
           onClick={() => setIsQueueOpen(false)}
           aria-label="Close queue"
           tooltip="Close"
-          icon={<X className="w-3.5 h-3.5 text-cinema-ivory" />}
+          className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center"
+          icon={<X className="w-4 h-4 text-cinema-ivory" />}
         />
       </div>
 

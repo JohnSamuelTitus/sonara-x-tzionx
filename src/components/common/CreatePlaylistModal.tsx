@@ -28,7 +28,7 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({ isOpen
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md p-6 rounded-2xl bg-cinema-surface border-2 border-cinema-border/80 shadow-2xl">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto p-5 sm:p-6 rounded-2xl bg-cinema-surface border-2 border-cinema-border/80 shadow-2xl">
         <div className="flex items-center justify-between pb-4 border-b border-cinema-border/50">
           <div className="flex items-center gap-2.5">
             <FolderPlus className="w-5 h-5 text-cinema-gold" />

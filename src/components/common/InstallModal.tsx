@@ -28,7 +28,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md bg-cinema-surface border-2 border-cinema-gold/40 rounded-2xl p-6 shadow-2xl text-cinema-ivory space-y-5"
+        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-cinema-surface border-2 border-cinema-gold/40 rounded-2xl p-5 sm:p-6 shadow-2xl text-cinema-ivory space-y-4 sm:space-y-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

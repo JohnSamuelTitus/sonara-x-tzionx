@@ -30,8 +30,16 @@ export const VolumeControl: React.FC = () => {
           shape="square"
           size="xs"
           onClick={() => setIsYouTubeVideoVisible(!isYouTubeVideoVisible)}
-          aria-label={isYouTubeVideoVisible ? 'Hide cinema screen' : 'Show cinema screen'}
-          tooltip="Cinema Screen"
+          aria-label={
+            isYouTubeVideoVisible
+              ? 'Cinema Screen: ON (Click to turn OFF)'
+              : 'Cinema Screen: OFF (Click to turn ON)'
+          }
+          tooltip={
+            isYouTubeVideoVisible
+              ? 'Cinema Screen: ON (Click to turn OFF)'
+              : 'Cinema Screen: OFF (Click to turn ON)'
+          }
           icon={<Tv className="w-3.5 h-3.5" />}
         />
       )}

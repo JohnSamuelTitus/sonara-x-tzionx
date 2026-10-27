@@ -13,7 +13,6 @@ import {
   Volume1,
   VolumeX,
   ListMusic,
-  Tv,
   Loader2,
 } from 'lucide-react';
 import { usePlayer } from '../../context/PlayerContext';
@@ -45,9 +44,6 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
     toggleMute,
     isQueueOpen,
     setIsQueueOpen,
-    isYouTubeActive,
-    isYouTubeVideoVisible,
-    setIsYouTubeVideoVisible,
   } = usePlayer();
 
   if (!isOpen || !currentTrack) return null;
@@ -55,7 +51,6 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
   const liked = isLiked(currentTrack.id);
   const effectiveVolume = isMuted ? 0 : volume;
   const VolumeIcon = effectiveVolume === 0 ? VolumeX : effectiveVolume < 0.5 ? Volume1 : Volume2;
-  const isYouTubeTrack = isYouTubeActive || Boolean(currentTrack.videoId) || currentTrack.id.startsWith('yt-');
 
   return (
     <div
@@ -71,26 +66,27 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
           alt=""
           className="w-full h-full object-cover filter blur-3xl scale-125"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-cinema-bg/70 via-cinema-bg/90 to-cinema-bg" />
+        <div className="absolute inset-0 bg-gradient-to-b from-cinema-bg/75 via-cinema-bg/90 to-cinema-bg" />
       </div>
 
-      <div className="relative z-10 flex flex-col justify-between min-h-full p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <div className="relative z-10 flex flex-col justify-between min-h-full p-4 sm:p-6 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         {/* Top Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <KeycapButton
             variant="deck"
             shape="circle"
             size="sm"
             onClick={onClose}
             aria-label="Collapse player"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center"
             icon={<ChevronDown className="w-5 h-5 text-cinema-ivory" />}
           />
 
-          <div className="text-center">
-            <span className="font-mono text-[10px] font-bold text-cinema-gold uppercase tracking-widest">
+          <div className="text-center min-w-0 flex-1 px-2">
+            <span className="font-mono text-[9px] sm:text-[10px] font-bold text-cinema-gold uppercase tracking-widest block">
               PLAYING FROM TFI VAULT
             </span>
-            <p className="font-sans text-xs text-cinema-ivory font-bold truncate max-w-[200px] mx-auto">
+            <p className="font-sans text-xs text-cinema-ivory font-bold truncate max-w-[200px] sm:max-w-xs mx-auto">
               {currentTrack.album || 'Sonara Cinema Master'}
             </p>
           </div>
@@ -100,14 +96,15 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
             shape="circle"
             size="sm"
             onClick={() => setIsQueueOpen(!isQueueOpen)}
-            aria-label="Toggle queue"
+            aria-label="Toggle playback queue"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center"
             icon={<ListMusic className="w-4 h-4 text-cinema-ivory" />}
           />
         </div>
 
-        {/* Center: Large Vinyl Artwork */}
-        <div className="my-auto py-4 flex flex-col items-center">
-          <div className="relative group w-64 h-64 sm:w-72 sm:h-72 max-w-[70vw] max-h-[40vh] aspect-square rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.9)] border-2 border-cinema-gold/40">
+        {/* Center: Large Vinyl Artwork (Responsive for short and tall displays) */}
+        <div className="my-auto py-3 sm:py-4 flex flex-col items-center">
+          <div className="relative group w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64 max-w-[70vw] max-h-[35vh] aspect-square rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.9)] border-2 border-cinema-gold/40">
             <img
               src={currentTrack.coverUrl}
               alt={currentTrack.title}
@@ -117,12 +114,12 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
           </div>
 
           {/* Track Title & Like Button */}
-          <div className="w-full max-w-sm mt-6 flex items-center justify-between">
-            <div className="min-w-0 flex-1 mr-4">
-              <h1 className="font-sans text-lg sm:text-xl font-bold text-cinema-ivory truncate">
+          <div className="w-full max-w-sm mt-4 sm:mt-6 flex items-center justify-between px-1">
+            <div className="min-w-0 flex-1 mr-3">
+              <h1 className="font-sans text-base sm:text-lg font-bold text-cinema-ivory truncate">
                 {currentTrack.title}
               </h1>
-              <p className="font-sans text-sm text-cinema-ivoryMuted truncate mt-0.5">
+              <p className="font-sans text-xs sm:text-sm text-cinema-ivoryMuted truncate mt-0.5">
                 {currentTrack.artist}
               </p>
               <div className="flex items-center gap-2 mt-1">
@@ -138,6 +135,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
               size="md"
               onClick={() => toggleLike(currentTrack.id, currentTrack)}
               aria-label={liked ? `Unlike ${currentTrack.title}` : `Like ${currentTrack.title}`}
+              className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center flex-shrink-0"
               icon={
                 <Heart
                   className={`w-5 h-5 ${
@@ -150,8 +148,8 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
         </div>
 
         {/* Scrubber & Controls */}
-        <div className="w-full max-w-sm mx-auto space-y-5">
-          {/* Progress Bar */}
+        <div className="w-full max-w-sm mx-auto space-y-4 sm:space-y-5">
+          {/* Progress Bar with elapsed time and duration */}
           <div className="w-full">
             <ProgressBar />
           </div>
@@ -168,6 +166,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
               hasLed
               ledActive={isShuffle}
               aria-label={isShuffle ? 'Disable shuffle' : 'Enable shuffle'}
+              className="w-10 h-10 min-w-[40px] min-h-[40px]"
               icon={<Shuffle className="w-4 h-4" />}
             />
 
@@ -178,6 +177,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
               size="md"
               onClick={previousTrack}
               aria-label="Previous track"
+              className="w-11 h-11 min-w-[44px] min-h-[44px]"
               icon={<SkipBack className="w-5 h-5 fill-current" />}
             />
 
@@ -188,7 +188,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
               size="lg"
               onClick={togglePlay}
               aria-label={isPlaying ? 'Pause' : 'Play'}
-              className="w-16 h-16 shadow-2xl border-2 border-cinema-gold/50"
+              className="w-16 h-16 min-w-[64px] min-h-[64px] shadow-2xl border-2 border-cinema-gold/50 flex items-center justify-center"
             >
               {isLoading ? (
                 <Loader2 className="w-7 h-7 animate-spin text-white" />
@@ -206,6 +206,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
               size="md"
               onClick={nextTrack}
               aria-label="Next track"
+              className="w-11 h-11 min-w-[44px] min-h-[44px]"
               icon={<SkipForward className="w-5 h-5 fill-current" />}
             />
 
@@ -219,6 +220,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
               hasLed
               ledActive={repeatMode !== 'off'}
               aria-label={`Repeat mode: ${repeatMode}`}
+              className="w-10 h-10 min-w-[40px] min-h-[40px]"
               icon={
                 repeatMode === 'one' ? (
                   <Repeat1 className="w-4 h-4" />
@@ -229,46 +231,32 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
             />
           </div>
 
-          {/* Volume & Video Screen Toggle */}
-          <div className="flex items-center justify-between gap-3 pt-2 px-1">
-            <div className="flex items-center gap-2 flex-1">
-              <KeycapButton
-                variant="deck"
-                shape="square"
-                size="xs"
-                onClick={toggleMute}
-                aria-label={isMuted ? 'Unmute' : 'Mute'}
-                icon={<VolumeIcon className="w-3.5 h-3.5" />}
+          {/* Volume Control */}
+          <div className="flex items-center justify-center gap-2.5 pt-1 px-1 w-full max-w-[240px] mx-auto">
+            <KeycapButton
+              variant="deck"
+              shape="square"
+              size="xs"
+              onClick={toggleMute}
+              aria-label={isMuted ? 'Unmute volume' : 'Mute volume'}
+              className="w-9 h-9 min-w-[36px] min-h-[36px]"
+              icon={<VolumeIcon className="w-3.5 h-3.5" />}
+            />
+            <div className="flex-1">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={effectiveVolume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                aria-label="Volume level"
+                className="deck-slider w-full h-1.5 cursor-pointer"
+                style={{
+                  background: `linear-gradient(to right, #D4AF37 ${effectiveVolume * 100}%, #2A1F26 ${effectiveVolume * 100}%)`,
+                }}
               />
-              <div className="flex-1 max-w-[140px]">
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={effectiveVolume}
-                  onChange={(e) => setVolume(parseFloat(e.target.value))}
-                  aria-label="Volume level"
-                  className="deck-slider w-full h-1.5 cursor-pointer"
-                  style={{
-                    background: `linear-gradient(to right, #D4AF37 ${effectiveVolume * 100}%, #2A1F26 ${effectiveVolume * 100}%)`,
-                  }}
-                />
-              </div>
             </div>
-
-            {isYouTubeTrack && (
-              <KeycapButton
-                variant={isYouTubeVideoVisible ? 'primary' : 'deck'}
-                shape="square"
-                size="xs"
-                onClick={() => setIsYouTubeVideoVisible(!isYouTubeVideoVisible)}
-                aria-label={isYouTubeVideoVisible ? 'Hide cinema screen' : 'Show cinema screen'}
-                icon={<Tv className="w-3.5 h-3.5" />}
-              >
-                Screen
-              </KeycapButton>
-            )}
           </div>
         </div>
       </div>

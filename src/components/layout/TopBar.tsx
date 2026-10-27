@@ -40,7 +40,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <button
             type="button"
             onClick={onOpenMobileMenu}
-            className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-cinema-panel border border-cinema-gold/30 text-cinema-gold hover:border-cinema-gold transition-colors flex-shrink-0"
+            className="md:hidden flex items-center justify-center w-10 h-10 min-w-[44px] min-h-[44px] rounded-xl bg-cinema-panel border border-cinema-gold/30 text-cinema-gold hover:border-cinema-gold transition-colors flex-shrink-0"
             aria-label="Open navigation menu"
           >
             <Menu className="w-4 h-4" />
@@ -127,7 +127,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={() => setIsQueueOpen(!isQueueOpen)}
           aria-label="Toggle playback queue"
           tooltip="Queue"
-          className="md:hidden"
+          className="md:hidden w-10 h-10 min-w-[44px] min-h-[44px] flex items-center justify-center"
           icon={<ListMusic className="w-4 h-4" />}
         />
       </div>

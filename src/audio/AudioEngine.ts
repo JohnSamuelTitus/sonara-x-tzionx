@@ -25,6 +25,20 @@ export class AudioEngine {
     // Allow injecting audio instance for test environments, or create native HTMLAudioElement
     this.audio = initialAudio || (typeof Audio !== 'undefined' ? new Audio() : ({} as HTMLAudioElement));
     
+    // Configure mobile browser audio flags
+    if (this.audio) {
+      try {
+        this.audio.preload = 'auto';
+        (this.audio as any).playsInline = true;
+        if (typeof this.audio.setAttribute === 'function') {
+          this.audio.setAttribute('playsinline', 'true');
+          this.audio.setAttribute('webkit-playsinline', 'true');
+        }
+      } catch {
+        // Ignore in restricted environments
+      }
+    }
+    
     this.setupListeners();
   }
 

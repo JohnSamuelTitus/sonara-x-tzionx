@@ -6,6 +6,13 @@ import { YouTubePlayerEngine } from '../audio/YouTubePlayerEngine';
 import { DEMO_TRACKS } from '../audio/demoCatalog';
 import { loadUserData, saveUserData } from '../utils/storage';
 import { checkYouTubeStatus } from '../audio/youtubeApiClient';
+import {
+  setMediaSessionMetadata,
+  setMediaSessionPlaybackState,
+  setMediaSessionPositionState,
+  registerMediaSessionHandlers,
+  clearMediaSession,
+} from '../utils/mediaSession';
 
 export type AppView = 'home' | 'search' | 'playlist' | 'queue' | 'category';
 
@@ -62,13 +69,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isQueueOpen, setIsQueueOpen] = useState(false);
   const [isYouTubeConfigured, setIsYouTubeConfigured] = useState(false);
   const [isYouTubeActive, setIsYouTubeActive] = useState(false);
-  const [isYouTubeVideoVisible, setIsYouTubeVideoVisibleState] = useState(false);
-  const userExplicitlyClosedVideoRef = useRef(false);
-
-  const setIsYouTubeVideoVisible = useCallback((visible: boolean) => {
-    userExplicitlyClosedVideoRef.current = !visible;
-    setIsYouTubeVideoVisibleState(visible);
-  }, []);
+  const [isYouTubeVideoVisible, setIsYouTubeVideoVisible] = useState(false);
 
   // In-memory track registry for dynamically discovered YouTube tracks
   const trackRegistryRef = useRef<Map<string, Track>>(new Map());
@@ -209,8 +210,11 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const isYouTube = track.provider === 'youtube' || Boolean(track.videoId) || track.id.startsWith('yt-');
     setIsYouTubeActive(isYouTube);
-    if (isYouTube && !userExplicitlyClosedVideoRef.current) {
-      setIsYouTubeVideoVisibleState(true);
+    // Cinema screen is user decision: default is OFF (not on).
+    // Respect the user's decision (whether they turned it ON or OFF).
+    // Only close if switching to a non-YouTube track that has no video.
+    if (!isYouTube) {
+      setIsYouTubeVideoVisible(false);
     }
 
     try {
@@ -398,6 +402,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => {
       audio.destroy();
       yt.destroy();
+      clearMediaSession();
     };
   }, []);
 
@@ -655,6 +660,82 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // 1. Sync metadata to Lock-Screen Media Session
+  useEffect(() => {
+    setMediaSessionMetadata(currentTrack);
+  }, [currentTrack]);
+
+  // 2. Sync playback state (playing / paused) to Lock-Screen
+  useEffect(() => {
+    if (currentTrack) {
+      setMediaSessionPlaybackState(isPlaying ? 'playing' : 'paused');
+    } else {
+      setMediaSessionPlaybackState('none');
+    }
+  }, [isPlaying, currentTrack]);
+
+  // 3. Sync position state (elapsed time / duration) to Lock-Screen scrubber
+  useEffect(() => {
+    if (currentTrack && duration > 0) {
+      setMediaSessionPositionState(currentTime, duration);
+    }
+  }, [currentTime, duration, currentTrack]);
+
+  // 4. Register Lock-Screen and Headset media control action handlers
+  useEffect(() => {
+    const unregister = registerMediaSessionHandlers({
+      onPlay: () => {
+        const { isPlaying: playing, currentTrack: track, queue: q, isYouTubeActive: ytActive } = stateRef.current;
+        if (!playing) {
+          if (!track && q.length > 0) {
+            playTrack(q[0]);
+          } else if (ytActive && youtubeEngineRef.current) {
+            youtubeEngineRef.current.play();
+          } else if (audioEngineRef.current) {
+            audioEngineRef.current.play();
+          }
+        }
+      },
+      onPause: () => {
+        const { isPlaying: playing, isYouTubeActive: ytActive } = stateRef.current;
+        if (playing) {
+          if (ytActive && youtubeEngineRef.current) {
+            youtubeEngineRef.current.pause();
+          } else if (audioEngineRef.current) {
+            audioEngineRef.current.pause();
+          }
+        }
+      },
+      onPrevious: () => {
+        previousTrack();
+      },
+      onNext: () => {
+        nextTrack(false);
+      },
+      onSeekTo: (seconds) => {
+        seek(seconds);
+      },
+      onSeekBackward: (offset) => {
+        const { currentTime: curr } = stateRef.current;
+        seek(Math.max(0, curr - offset));
+      },
+      onSeekForward: (offset) => {
+        const { currentTime: curr, duration: dur } = stateRef.current;
+        seek(Math.min(dur, curr + offset));
+      },
+      onStop: () => {
+        audioEngineRef.current?.pause();
+        youtubeEngineRef.current?.pause();
+        setIsPlaying(false);
+        clearMediaSession();
+      },
+    });
+
+    return () => {
+      unregister();
+    };
+  }, [playTrack, previousTrack, nextTrack, seek]);
 
   const value: PlayerContextValue = {
     currentTrack,

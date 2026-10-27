@@ -284,12 +284,12 @@ export const HomeView: React.FC = () => {
     <div className="space-y-10 pb-16">
       {/* 1. Retro Analog Hero Showcase Banner */}
       <section className="relative rounded-2xl overflow-hidden cinema-panel border-2 border-cinema-gold/40 shadow-2xl bg-[#0E0A0C]">
-        <div className="relative h-80 sm:h-88 md:h-[400px] w-full overflow-hidden">
+        <div className="relative min-h-[340px] sm:h-88 md:h-[400px] w-full overflow-hidden flex flex-col justify-between">
           {/* Background Poster Image with Vintage Film Saturation */}
           <img
             src={activeHero.imageUrl}
             alt={activeHero.title}
-            className="w-full h-full object-cover object-center filter brightness-[0.70] contrast-[1.15] sepia-[0.25] transition-all duration-700 transform hover:scale-102"
+            className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.70] contrast-[1.15] sepia-[0.25] transition-all duration-700 transform hover:scale-102"
           />
 
           {/* Deep Vintage Gradients & Tape Texture Overlay */}
@@ -304,11 +304,11 @@ export const HomeView: React.FC = () => {
           />
 
           {/* Foreground Hero Content */}
-          <div className="absolute inset-0 p-5 sm:p-8 md:p-10 flex flex-col justify-between z-10">
+          <div className="relative inset-0 p-4 sm:p-8 md:p-10 flex flex-col justify-between flex-1 z-10 gap-4">
             {/* Top Analog Deck Header Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2.5">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-black/80 backdrop-blur-md text-cinema-gold border border-cinema-gold/50 flex items-center gap-1.5 shadow-md">
+                <span className="font-mono text-[9px] xs:text-[10px] font-bold tracking-widest uppercase px-2.5 xs:px-3 py-1 rounded-full bg-black/80 backdrop-blur-md text-cinema-gold border border-cinema-gold/50 flex items-center gap-1.5 shadow-md">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
                   {activeHero.tag}
                 </span>
@@ -319,8 +319,8 @@ export const HomeView: React.FC = () => {
               </div>
 
               {/* Tape Deck Counter & Reel Navigator */}
-              <div className="flex items-center gap-2.5">
-                <div className="tape-counter font-mono text-[10px] tracking-widest text-cinema-gold bg-black/80 px-2.5 py-1 rounded border border-cinema-gold/40 flex items-center gap-1.5 shadow-md">
+              <div className="flex items-center gap-2">
+                <div className="tape-counter font-mono text-[9px] xs:text-[10px] tracking-widest text-cinema-gold bg-black/80 px-2 xs:px-2.5 py-1 rounded border border-cinema-gold/40 flex items-center gap-1.5 shadow-md">
                   <Radio className="w-3 h-3 text-cinema-gold" />
                   <span>{activeHero.tapeCounter}</span>
                 </div>
@@ -334,7 +334,7 @@ export const HomeView: React.FC = () => {
                       onClick={() => setActiveHeroIdx(idx)}
                       className={`transition-all rounded-full flex items-center justify-center ${
                         activeHeroIdx === idx
-                          ? 'w-6 h-3 bg-cinema-gold text-black shadow-[0_0_8px_rgba(212,175,55,0.6)]'
+                          ? 'w-5 xs:w-6 h-2.5 xs:h-3 bg-cinema-gold text-black shadow-[0_0_8px_rgba(212,175,55,0.6)]'
                           : 'w-2 h-2 bg-cinema-ivoryMuted/30 hover:bg-white'
                       }`}
                       aria-label={`Show ${h.title}`}
@@ -345,12 +345,12 @@ export const HomeView: React.FC = () => {
             </div>
 
             {/* Main Title Lettering & Vintage Controls */}
-            <div className="max-w-2xl space-y-2.5">
-              <div className="inline-block font-mono text-[10px] font-bold text-cinema-gold tracking-widest uppercase bg-cinema-wine/40 px-2 py-0.5 rounded border border-cinema-gold/30">
+            <div className="max-w-2xl space-y-2">
+              <div className="inline-block font-mono text-[9px] xs:text-[10px] font-bold text-cinema-gold tracking-widest uppercase bg-cinema-wine/40 px-2 py-0.5 rounded border border-cinema-gold/30">
                 REEL #{activeHero.tapeCode}
               </div>
 
-              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-wider text-gold-gradient uppercase leading-none drop-shadow-md">
+              <h1 className="font-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-wider text-gold-gradient uppercase leading-tight drop-shadow-md">
                 {activeHero.title}
               </h1>
 
@@ -363,14 +363,14 @@ export const HomeView: React.FC = () => {
               </p>
 
               {/* Tactile Retro Keycap Buttons */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-2.5 pt-1.5 sm:pt-2">
                 <KeycapButton
                   variant="primary"
                   shape="pill"
                   size="md"
                   onClick={handlePlayHero}
                   icon={<Play className="w-4 h-4 fill-current ml-0.5" />}
-                  className="font-sans font-bold shadow-xl"
+                  className="font-sans font-bold shadow-xl text-xs sm:text-sm min-h-[44px]"
                 >
                   Play Retro Vault
                 </KeycapButton>
@@ -381,7 +381,7 @@ export const HomeView: React.FC = () => {
                   size="md"
                   onClick={() => selectCategory(activeHero.catId)}
                   icon={<Disc3 className="w-4 h-4 text-cinema-gold" />}
-                  className="font-sans font-semibold"
+                  className="font-sans font-semibold text-xs sm:text-sm min-h-[44px]"
                 >
                   Explore Analog Crates
                 </KeycapButton>
@@ -415,24 +415,24 @@ export const HomeView: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
           {RETRO_QUICK_PICKS.map((item) => (
             <div
               key={item.id}
               onClick={() => selectCategory(item.catId)}
-              className="group relative flex items-center gap-3.5 bg-gradient-to-r from-[#181116] to-[#110C0F] hover:from-[#241921] hover:to-[#1B131A] p-2.5 rounded-xl overflow-hidden border border-cinema-border/60 hover:border-cinema-gold/70 transition-all duration-300 cursor-pointer shadow-md hover:shadow-[0_8px_22px_rgba(212,175,55,0.15)] hover:-translate-y-0.5"
+              className="group relative flex items-center gap-2.5 xs:gap-3 sm:gap-3.5 bg-gradient-to-r from-[#181116] to-[#110C0F] hover:from-[#241921] hover:to-[#1B131A] p-2 xs:p-2.5 rounded-xl overflow-hidden border border-cinema-border/60 hover:border-cinema-gold/70 transition-all duration-300 cursor-pointer shadow-md hover:shadow-[0_8px_22px_rgba(212,175,55,0.15)] hover:-translate-y-0.5"
             >
               {/* Vinyl Sleeve with Grooved Record Rim Peek */}
               <div className="relative flex-shrink-0 flex items-center">
                 <img
                   src={item.img}
                   alt={item.title}
-                  className="w-16 h-16 rounded-lg object-cover bg-cinema-card relative z-10 shadow-md border border-black/50 filter contrast-[1.05]"
+                  className="w-13 h-13 xs:w-15 xs:h-15 sm:w-16 sm:h-16 rounded-lg object-cover bg-cinema-card relative z-10 shadow-md border border-black/50 filter contrast-[1.05]"
                 />
                 {/* Peeking Vinyl Record Disc */}
-                <div className="w-14 h-14 rounded-full bg-[#0E0A0C] border border-cinema-gold/30 -ml-7 group-hover:-ml-4 transition-all duration-300 flex items-center justify-center shadow-md relative z-0 pointer-events-none">
-                  <div className="w-10 h-10 rounded-full border border-cinema-border/50 flex items-center justify-center">
-                    <div className="w-6 h-6 rounded-full bg-cinema-wine/60 border border-cinema-gold/40 flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
+                <div className="w-11 h-11 xs:w-13 xs:h-13 sm:w-14 sm:h-14 rounded-full bg-[#0E0A0C] border border-cinema-gold/30 -ml-5 xs:-ml-6 sm:-ml-7 group-hover:-ml-4 transition-all duration-300 flex items-center justify-center shadow-md relative z-0 pointer-events-none">
+                  <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full border border-cinema-border/50 flex items-center justify-center">
+                    <div className="w-5 h-5 xs:w-5.5 xs:h-5.5 sm:w-6 sm:h-6 rounded-full bg-cinema-wine/60 border border-cinema-gold/40 flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
                       <div className="w-1.5 h-1.5 rounded-full bg-black" />
                     </div>
                   </div>
@@ -462,7 +462,7 @@ export const HomeView: React.FC = () => {
                   e.stopPropagation();
                   selectCategory(item.catId);
                 }}
-                className="keycap-base keycap-circle keycap-primary w-9 h-9 mr-1 flex items-center justify-center opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all shadow-lg flex-shrink-0"
+                className="keycap-base keycap-circle keycap-primary w-9 h-9 min-w-[36px] min-h-[36px] mr-0.5 xs:mr-1 flex items-center justify-center opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all shadow-lg flex-shrink-0"
               >
                 <Play className="w-4 h-4 fill-current ml-0.5" />
               </button>
