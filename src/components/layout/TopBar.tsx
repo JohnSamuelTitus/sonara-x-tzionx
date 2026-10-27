@@ -108,7 +108,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             aria-label="Install Sonara app"
             tooltip="Install App"
             icon={<Download className="w-3.5 h-3.5 text-cinema-bg" />}
-            className="font-mono text-[10px] hidden xs:inline-flex sm:inline-flex"
+            className="font-mono text-[10px] hidden sm:inline-flex"
           >
             <span className="hidden sm:inline">Install</span>
           </KeycapButton>

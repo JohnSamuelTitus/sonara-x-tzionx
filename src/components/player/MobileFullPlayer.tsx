@@ -104,7 +104,7 @@ export const MobileFullPlayer: React.FC<MobileFullPlayerProps> = ({ isOpen, onCl
 
         {/* Center: Large Vinyl Artwork (Responsive for short and tall displays) */}
         <div className="my-auto py-3 sm:py-4 flex flex-col items-center">
-          <div className="relative group w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64 max-w-[70vw] max-h-[35vh] aspect-square rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.9)] border-2 border-cinema-gold/40">
+          <div className="relative group w-48 h-48 sm:w-64 sm:h-64 max-w-[70vw] max-h-[35vh] aspect-square rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.9)] border-2 border-cinema-gold/40">
             <img
               src={currentTrack.coverUrl}
               alt={currentTrack.title}

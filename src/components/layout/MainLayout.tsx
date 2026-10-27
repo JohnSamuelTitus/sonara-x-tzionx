@@ -48,10 +48,10 @@ export const MainLayout: React.FC = () => {
 
           {/* Dynamic Content View Container with Responsive Safe Area Padding */}
           <main
-            className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-6 py-4 sm:py-6 pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-20 focus:outline-none flex flex-col justify-between"
+            className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-6 py-4 sm:py-6 pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-20 focus:outline-none"
             tabIndex={-1}
           >
-            <div className="flex-1 max-w-[1600px] w-full mx-auto">
+            <div className="max-w-[1600px] w-full mx-auto min-h-full">
               {activeView === 'home' && <HomeView />}
               {activeView === 'search' && <SearchView />}
               {activeView === 'playlist' && <PlaylistView />}
